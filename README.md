@@ -10,6 +10,7 @@ O teste pode ser entregue parcialmente, porém a porcentagem de aderencia ao esc
 # Recomendações
 
 Recomendamos uso de arquitetura MVC em ambos os backends.
+Recomendamos que o pull request tem a menor quantidade possível de arquivos para cumprir o desafio.
 
 ## Teste Prático — Desenvolvedor Junior
 
