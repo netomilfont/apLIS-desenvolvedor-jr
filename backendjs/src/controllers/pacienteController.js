@@ -1,4 +1,5 @@
 const PacienteModel = require('../models/pacienteModel');
+const getMessages   = require('../config/messages');
 
 const PacienteController = {
   async index(req, res) {
@@ -6,27 +7,79 @@ const PacienteController = {
       const pacientes = await PacienteModel.getAll();
       res.json(pacientes);
     } catch (err) {
-      res.status(500).json({ error: 'Erro ao buscar pacientes' });
+      const msg = getMessages(req);
+      res.status(500).json({ error: msg.serverErr });
+    }
+  },
+
+  async show(req, res) {
+    const msg = getMessages(req);
+    try {
+      const paciente = await PacienteModel.getById(req.params.id);
+      if (!paciente) {
+        return res.status(404).json({ error: msg.notFound });
+      }
+      res.json(paciente);
+    } catch (err) {
+      res.status(500).json({ error: msg.serverErr });
     }
   },
 
   async store(req, res) {
+    const msg = getMessages(req);
     const { nome, dataNascimento, carteirinha, cpf } = req.body;
 
     if (!nome || !carteirinha || !cpf) {
-      return res.status(422).json({
-        error: 'Campos nome, carteirinha e cpf são obrigatórios'
-      });
+      return res.status(422).json({ error: msg.required });
     }
 
     try {
       await PacienteModel.create({ nome, dataNascimento, carteirinha, cpf });
-      res.status(201).json({ message: 'Paciente criado com sucesso' });
+      res.status(201).json({ message: msg.created });
     } catch (err) {
       if (err.code === 'ER_DUP_ENTRY') {
-        return res.status(409).json({ error: 'CPF já cadastrado' });
+        return res.status(409).json({ error: msg.dupCpf });
       }
-      res.status(500).json({ error: 'Erro ao criar paciente' });
+      res.status(500).json({ error: msg.serverErr });
+    }
+  },
+
+  async update(req, res) {
+    const msg = getMessages(req);
+    const { nome, dataNascimento, carteirinha, cpf } = req.body;
+
+    if (!nome || !carteirinha || !cpf) {
+      return res.status(422).json({ error: msg.required });
+    }
+
+    try {
+      const exists = await PacienteModel.getById(req.params.id);
+      if (!exists) {
+        return res.status(404).json({ error: msg.notFound });
+      }
+
+      await PacienteModel.update(req.params.id, { nome, dataNascimento, carteirinha, cpf });
+      res.json({ message: msg.updated });
+    } catch (err) {
+      if (err.code === 'ER_DUP_ENTRY') {
+        return res.status(409).json({ error: msg.dupCpf });
+      }
+      res.status(500).json({ error: msg.serverErr });
+    }
+  },
+
+  async destroy(req, res) {
+    const msg = getMessages(req);
+    try {
+      const exists = await PacienteModel.getById(req.params.id);
+      if (!exists) {
+        return res.status(404).json({ error: msg.notFound });
+      }
+
+      await PacienteModel.delete(req.params.id);
+      res.json({ message: msg.deleted });
+    } catch (err) {
+      res.status(500).json({ error: msg.serverErr });
     }
   },
 };
