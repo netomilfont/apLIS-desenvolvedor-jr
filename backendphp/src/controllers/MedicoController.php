@@ -7,6 +7,12 @@ class MedicoController
 {
     private MedicoModel $model;
 
+    private array $ufsValidas = [
+        'AC','AL','AP','AM','BA','CE','DF','ES','GO','MA',
+        'MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN',
+        'RS','RO','RR','SC','SP','SE','TO'
+    ];
+
     public function __construct()
     {
         $this->model = new MedicoModel();
@@ -42,6 +48,12 @@ class MedicoController
             return;
         }
 
+        if (!in_array(strtoupper($body['UFCRM']), $this->ufsValidas)) {
+            http_response_code(422);
+            echo json_encode(["error" => "UFCRM inválida"]);
+            return;
+        }
+
         if ($this->model->create($body)) {
             http_response_code(201);
             echo json_encode(["message" => $msg['created']]);
@@ -66,6 +78,12 @@ class MedicoController
         if (empty($body['nome']) || empty($body['CRM']) || empty($body['UFCRM'])) {
             http_response_code(422);
             echo json_encode(["error" => $msg['required']]);
+            return;
+        }
+
+        if (!in_array(strtoupper($body['UFCRM']), $this->ufsValidas)) {
+            http_response_code(422);
+            echo json_encode(["error" => "UFCRM inválida"]);
             return;
         }
 

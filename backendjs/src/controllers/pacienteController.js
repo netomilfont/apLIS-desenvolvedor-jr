@@ -1,6 +1,13 @@
 const PacienteModel = require('../models/pacienteModel');
 const getMessages   = require('../config/messages');
 
+function validarCPF(cpf) {
+  cpf = cpf.replace(/\D/g, '');
+  if (cpf.length !== 11) return false;
+  if (/^(\d)\1+$/.test(cpf)) return false;
+  return true;
+}
+
 const PacienteController = {
   async index(req, res) {
     try {
@@ -33,6 +40,10 @@ const PacienteController = {
       return res.status(422).json({ error: msg.required });
     }
 
+    if (!validarCPF(cpf)) {
+      return res.status(422).json({ error: 'CPF inválido' });
+    }
+
     try {
       await PacienteModel.create({ nome, dataNascimento, carteirinha, cpf });
       res.status(201).json({ message: msg.created });
@@ -50,6 +61,10 @@ const PacienteController = {
 
     if (!nome || !carteirinha || !cpf) {
       return res.status(422).json({ error: msg.required });
+    }
+
+    if (!validarCPF(cpf)) {
+      return res.status(422).json({ error: 'CPF inválido' });
     }
 
     try {
