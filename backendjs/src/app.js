@@ -1,4 +1,5 @@
 const express        = require('express');
+// Em produção, tem que usar: cors({ origin: process.env.FRONTEND_URL })
 const cors           = require('cors');
 const pacienteRoutes = require('./routes/pacienteRoutes');
 
