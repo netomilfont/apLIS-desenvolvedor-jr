@@ -132,7 +132,7 @@ curl -X POST http://localhost:8002/api/v1/pacientes \
 ## Decisões técnicas
 
 **Por que MVC nos backends?**
-Separação clara de responsabilidades — model cuida dos dados, controller cuida da lógica, route cuida do roteamento. Facilita manutenção e testes.
+Separação clara de responsabilidades:  model cuida dos dados, controller cuida da lógica, route cuida do roteamento. Facilita manutenção e testes.
 
 **Por que PDO no PHP sem framework?**
 O teste pede PHP puro. PDO com prepared statements garante segurança contra SQL injection sem dependências externas.
