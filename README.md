@@ -144,7 +144,7 @@ Pool evita abrir uma nova conexão a cada requisição, melhorando performance e
 Garante que apenas uma conexão com o banco seja criada durante o ciclo de vida da requisição PHP.
 
 **Por que i18n via header Accept-Language?**
-Padrão HTTP nativo — o frontend simplesmente muda o header e o backend responde no idioma correto, sem precisar de parâmetros extras na URL.
+Padrão HTTP nativo, o frontend simplesmente muda o header e o backend responde no idioma correto, sem precisar de parâmetros extras na URL.
 
 ---
 
